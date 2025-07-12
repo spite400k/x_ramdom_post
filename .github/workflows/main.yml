@@ -1,0 +1,42 @@
+name: Run Twitter Bot
+
+on:
+  schedule:
+    - cron: '30 0 * * *'  # 毎日09:30 JST（=00:30 UTC）に実行
+  workflow_dispatch:  # 手動実行も可
+
+jobs:
+  tweet:
+    runs-on: ubuntu-latest
+
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      API_KEY_1: ${{ secrets.API_KEY_1 }}
+      API_SECRET_1: ${{ secrets.API_SECRET_1 }}
+      ACCESS_TOKEN_1: ${{ secrets.ACCESS_TOKEN_1 }}
+      ACCESS_TOKEN_SECRET_1: ${{ secrets.ACCESS_TOKEN_SECRET_1 }}
+      API_KEY_2: ${{ secrets.API_KEY_2 }}
+      API_SECRET_2: ${{ secrets.API_SECRET_2 }}
+      ACCESS_TOKEN_2: ${{ secrets.ACCESS_TOKEN_2 }}
+      ACCESS_TOKEN_SECRET_2: ${{ secrets.ACCESS_TOKEN_SECRET_2 }}
+      API_KEY_3: ${{ secrets.API_KEY_3 }}
+      API_SECRET_3: ${{ secrets.API_SECRET_3 }}
+      ACCESS_TOKEN_3: ${{ secrets.ACCESS_TOKEN_3 }}
+      ACCESS_TOKEN_SECRET_3: ${{ secrets.ACCESS_TOKEN_SECRET_3 }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Twitter Bot
+        run: python main.py

@@ -21,17 +21,28 @@ def load_previous_posts(account_index: int) -> str:
 
 def generate_natural_post(account_index: int) -> str:
     time_ctx = get_time_context()
-    weather_ctx = get_weather_context()
     past_posts = load_previous_posts(account_index)
 
-    prompt = (
-        f"以下の過去投稿のスタイルを参考にしてください。\n"
-        f"今の時刻は{time_ctx}で、天気は{weather_ctx}です。\n"
-        f"この状況を踏まえて、自然で親しみやすいX投稿を140文字以内で1つ生成してください。\n\n"
-        f"【過去投稿例】\n{past_posts}\n\n"
-        f"【新しい投稿】："
-    )
-    
+    # 天気情報を含める確率10%
+    include_weather = random.random() < 0.1
+    weather_ctx = get_weather_context() if include_weather else None
+
+    if include_weather and weather_ctx:
+        prompt = (
+            f"以下の過去投稿のスタイルを参考にしてください。\n"
+            f"今の時刻は{time_ctx}で、天気は{weather_ctx}です。\n"
+            f"この状況を踏まえて、自然で親しみやすいX投稿を140文字以内で1つ生成してください。\n\n"
+            f"【過去投稿例】\n{past_posts}\n\n"
+            f"【新しい投稿】："
+        )
+    else:
+        prompt = (
+            f"以下の過去投稿のスタイルを参考にしてください。\n"
+            f"今の時刻は{time_ctx}です。\n"
+            f"この状況を踏まえて、自然で親しみやすいX投稿を140文字以内で1つ生成してください。\n\n"
+            f"【過去投稿例】\n{past_posts}\n\n"
+            f"【新しい投稿】："
+        )
 
     try:
         response = openai.chat.completions.create(

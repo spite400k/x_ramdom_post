@@ -1,9 +1,13 @@
+# .github/workflows/main.yml
 name: Run Twitter Bot
 
 on:
   schedule:
-    - cron: '30 0 * * *'  # 毎日09:30 JST（=00:30 UTC）に実行
-  workflow_dispatch:  # 手動実行も可
+    - cron: '0 22 * * *'   # JST 7:00
+    - cron: '0 2 * * *'    # JST 11:00
+    - cron: '0 6 * * *'    # JST 15:00
+    - cron: '0 11 * * *'   # JST 20:00
+  workflow_dispatch:
 
 jobs:
   tweet:

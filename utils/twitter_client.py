@@ -2,6 +2,19 @@
 import tweepy
 from utils.tweet_generator import generate_natural_post
 from datetime import datetime
+import logging
+
+log_dir = "logs"
+log_file = f"{log_dir}/bot_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    handlers=[
+        logging.FileHandler(log_file, encoding="utf-8"),
+        logging.StreamHandler()
+    ]
+)
 
 def post_to_account(account, account_index):
     client = tweepy.Client(
@@ -14,6 +27,6 @@ def post_to_account(account, account_index):
     tweet = generate_natural_post(account_index)
     try:
         response = client.create_tweet(text=tweet)
-        print(f"[{datetime.now()}] Account {account_index+1} Posted: {tweet}")
+        logging.info(f"Account {account_index + 1}: Posted: {tweet}")
     except Exception as e:
-        print(f"[{datetime.now()}] Error posting for Account {account_index+1}: {e}")
+        logging.error(f"Account {account_index + 1}: Error posting - {e}")

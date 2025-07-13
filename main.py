@@ -35,8 +35,8 @@ def main():
 
     for idx, account in enumerate(ACCOUNTS):
         logging.info(f"\n--- Posting for Account {idx + 1} ---")
-        # wait = random.randint(60, 60 * 60)  # 1分〜60分のランダム
-        wait=1
+        wait = random.randint(60, 60 * 60)  # 1分〜60分のランダム
+        # wait=1
         logging.info(f"Account {idx + 1}: {wait // 60}分待機してから投稿します")
         time.sleep(wait)
         try:

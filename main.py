@@ -8,6 +8,8 @@ from utils.twitter_client import post_to_account
 from config.accounts import ACCOUNTS
 
 # ログ設定
+# ログ用ディレクトリを作成（存在しなければ）
+os.makedirs("logs", exist_ok=True)  
 log_dir = "logs"
 log_file = f"{log_dir}/bot_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
 

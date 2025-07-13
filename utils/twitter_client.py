@@ -1,9 +1,12 @@
 # utils/twitter_client.py
+import os
 import tweepy
 from utils.tweet_generator import generate_natural_post
 from datetime import datetime
 import logging
 
+# ログ用ディレクトリを作成（存在しなければ）
+os.makedirs("logs", exist_ok=True)  
 log_dir = "logs"
 log_file = f"{log_dir}/bot_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
 

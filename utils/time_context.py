@@ -1,7 +1,9 @@
 from datetime import datetime
+from zoneinfo import ZoneInfo 
 
 def get_time_context() -> str:
-    hour = datetime.now().hour
+    jst_now = datetime.now(ZoneInfo("Asia/Tokyo"))
+    hour = jst_now.hour
     if 5 <= hour < 10:
         return "朝"
     elif 10 <= hour < 16:

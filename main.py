@@ -1,6 +1,7 @@
 # main.py
 import logging
-from datetime import datetime, time
+import time
+from datetime import datetime
 import random
 from utils.twitter_client import post_to_account
 from config.accounts import ACCOUNTS

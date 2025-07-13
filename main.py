@@ -2,6 +2,7 @@
 import logging
 import time
 from datetime import datetime
+from zoneinfo import ZoneInfo 
 import random
 from utils.twitter_client import post_to_account
 from config.accounts import ACCOUNTS
@@ -22,10 +23,10 @@ logging.basicConfig(
     ]
 )
 
-# 投稿許可時間帯かどうか（7:00〜21:59）
+# 投稿許可時間帯かどうか（7:00〜21:59 JST）
 def is_within_posting_hours():
-    now_hour = datetime.now().hour
-    return 7 <= now_hour < 22
+    jst_now = datetime.now(ZoneInfo("Asia/Tokyo"))
+    return 7 <= jst_now.hour < 22
 
 def main():
     if not is_within_posting_hours():
@@ -34,7 +35,8 @@ def main():
 
     for idx, account in enumerate(ACCOUNTS):
         logging.info(f"\n--- Posting for Account {idx + 1} ---")
-        wait = random.randint(60, 60 * 60)  # 1分〜60分のランダム
+        # wait = random.randint(60, 60 * 60)  # 1分〜60分のランダム
+        wait=1
         logging.info(f"Account {idx + 1}: {wait // 60}分待機してから投稿します")
         time.sleep(wait)
         try:

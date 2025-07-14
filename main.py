@@ -44,9 +44,9 @@ def main():
         time.sleep(wait)
         try:
             post_to_account(account, idx)
-            logging.info(f"Account {idx + 1}: 投稿成功")
+            logging.info(f"Account {idx + 1} {account.get('id', '')}: 投稿成功")
         except Exception as e:
-            logging.error(f"Account {idx + 1}: 投稿失敗 - {e}")
+            logging.error(f"Account {idx + 1} {account.get('id', '')}: 投稿失敗 - {e}")
 
 if __name__ == "__main__":
     main()

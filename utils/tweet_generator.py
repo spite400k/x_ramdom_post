@@ -21,7 +21,7 @@ def load_previous_posts(account_index: int) -> str:
     return "".join(samples)
 
 def generate_natural_post(account_index: int) -> str:
-    time_ctx = get_time_context()
+    # time_ctx = get_time_context()
     past_posts = load_previous_posts(account_index)
 
     profile = PERSONALITY_PROFILES.get(account_index, {
@@ -29,20 +29,26 @@ def generate_natural_post(account_index: int) -> str:
         "theme": "日常の出来事を話す"
     })
 
+    # 時間帯情報を含める確率10%
+    include_time = random.random() < 0.1
+    time_ctx = get_time_context() if include_time else None
+
     # 天気情報を含める確率10%
     include_weather = random.random() < 0.1
     weather_ctx = get_weather_context() if include_weather else None
 
-    prompt = (
-        f"{profile['name']}というキャラクターとして投稿を作成してください。\n"
-        f"投稿は{profile['theme']}が中心で、口調は{profile['tone']}です。\n"
-        f"今の時刻は{time_ctx}です。" +
-        (f" 天気は{weather_ctx}です。" if include_weather and weather_ctx else "") +
-        "\n\n"
-        f"以下の過去投稿のスタイルを参考にしてください。\n"
-        f"【過去投稿例】\n{past_posts}\n\n"
-        f"【新しい投稿】：140文字以内で自然なX投稿を1つ生成してください。"
-    )
+    prompt = f"""
+        {profile['name']}というキャラクターとして投稿を作成してください。
+        投稿は{profile['theme']}が中心で、口調は{profile['tone']}です。
+        今の時刻は{time_ctx}です。
+        {" 天気は{weather_ctx}です。" if include_weather and weather_ctx else ""}
+        以下の過去投稿のスタイルを参考にしてください。
+        【過去投稿例】
+        {past_posts}
+        30文字から140文字以内で自然なX投稿を1つ生成してください。
+        「【新しい投稿】：」などのような、不自然な文言は含めないでください。
+        「」や""などの記号は使用しないでください。
+        """
 
     try:
         response = openai.chat.completions.create(

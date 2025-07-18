@@ -27,6 +27,10 @@ jobs:
       API_SECRET_KEY_3: ${{ secrets.API_SECRET_KEY_3 }}
       ACCESS_TOKEN_3: ${{ secrets.ACCESS_TOKEN_3 }}
       ACCESS_TOKEN_SECRET_3: ${{ secrets.ACCESS_TOKEN_SECRET_3 }}
+      API_KEY_4: ${{ secrets.API_KEY_4 }}
+      API_SECRET_KEY_4: ${{ secrets.API_SECRET_KEY_4 }}
+      ACCESS_TOKEN_4: ${{ secrets.ACCESS_TOKEN_4 }}
+      ACCESS_TOKEN_SECRET_4: ${{ secrets.ACCESS_TOKEN_SECRET_4 }}
 
     steps:
       - name: Checkout code

@@ -52,7 +52,7 @@ def generate_natural_post(account_index: int) -> str:
 
     try:
         response = openai.chat.completions.create(
-            model="gpt-4",
+            model="gpt-4.1-nano",
             messages=[{"role": "user", "content": prompt}],
             temperature=0.8,
         )

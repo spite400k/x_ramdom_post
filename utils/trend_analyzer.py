@@ -46,11 +46,11 @@ def get_google_trends_fallback() -> str:
         logging.error(f"[GoogleTrends RSS Error] {e}")
         return ""
 
-def get_trending_topics_and_context(theme=None, account=None) -> str:
+def get_google_trends(theme=None, account=None) -> str:
     """Twitter API → Google RSS fallbackの順でトレンド取得"""
-    twitter_trends = get_trending_topics(theme=theme, account=account)
-    if twitter_trends:
-        return random.choice(twitter_trends)
+    # twitter_trends = get_trending_topics(theme=theme, account=account)
+    # if twitter_trends:
+    #     return random.choice(twitter_trends)
     
     # Fallback to Google Trends RSS
     return get_google_trends_fallback()

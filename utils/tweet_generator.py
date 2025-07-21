@@ -51,18 +51,33 @@ def generate_natural_post(account,account_index: int) -> str:
 
     # プロンプト組み立て
     prompt = f"""
+    #命令
     あなたは{profile['name']}というキャラクターです。
     口調は{profile['tone']}です。
-    テーマは「{profile['theme']}」です。
+    好きなものは「{profile['theme']}」です。
     投稿内容は自然で親しみやすいものにしてください。
+    
+    #制約条件
+    {profile['conditions'] if 'conditions' in profile else ''}
+    Xに投稿する文章を{max_len}文字以内で1つ作成してください。
+    「新しい投稿：」などの見出しは不要です。
+    「」や""などの記号も不要です。
+
+
+    #話題のヒント
     {f'今の時刻は{time_ctx}です。' if time_ctx else ''}
     {f'天気は{weather_ctx}です。' if weather_ctx else ''}
     {f'現在話題のトピック: {trend_ctx}' if trend_ctx else ''}
     {past_posts}
-    Xに投稿する文章を{max_len}文字以内で1つ作成してください。
-    「新しい投稿：」などの見出しは不要です。
-    「」や""などの記号も不要です。
     """
+
+    # #入力情報例
+    # {profile['input'] if 'input' in profile else ''}
+
+    # #出力例
+    # {profile['output'] if 'output' in profile else ''}
+
+    
     logging.info(f"[DEBUG] Prompt: {prompt.strip()}")
     try:
         response = openai.chat.completions.create(

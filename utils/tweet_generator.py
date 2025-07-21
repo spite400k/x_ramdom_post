@@ -1,4 +1,5 @@
 # utils/tweet_generator.py
+import logging
 import openai
 import os
 import random
@@ -6,6 +7,7 @@ from datetime import datetime
 from utils.weather import get_weather_context
 from utils.time_context import get_time_context
 from config.personality_profiles import PERSONALITY_PROFILES
+from utils.trend_analyzer import get_google_trends
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
@@ -20,42 +22,48 @@ def load_previous_posts(account_index: int) -> str:
     samples = random.sample(lines, min(3, len(lines)))
     return "".join(samples)
 
-def generate_natural_post(account_index: int) -> str:
-    # time_ctx = get_time_context()
-    past_posts = load_previous_posts(account_index)
-
+def generate_natural_post(account,account_index: int) -> str:
     profile = PERSONALITY_PROFILES.get(account_index, {
+        "name": f"Account{account_index + 1}",
         "tone": "自然で親しみやすい口調",
         "theme": "日常の出来事を話す"
     })
 
-    # 時間帯情報を含める確率10%
+    # コンテキスト情報（天気・時間・トレンド）
     include_time = random.random() < 0.1
-    time_ctx = get_time_context() if include_time else None
-
-    # 天気情報を含める確率10%
     include_weather = random.random() < 0.1
+    include_trend = random.random() < 1.0
+
+    time_ctx = get_time_context() if include_time else None
     weather_ctx = get_weather_context() if include_weather else None
+    trend_ctx = get_google_trends(profile['theme'], account) if include_trend else None
 
-    # 投稿の文字数をランダムに決定（1〜20文字）
-    text_length = random.randint(5, 20)
+    # 過去投稿の使用（10%）
+    past_posts = load_previous_posts(account_index)
+    use_past = past_posts and random.random() < 0.1
+    if use_past:
+        past_posts = f"過去の投稿例:\n{past_posts}\n"
+    else:
+        past_posts = ""
 
-    # 過去投稿を参考にするのは確率10%
-    if past_posts and random.random() < 0.1:
-        past_posts = f"過去投稿のスタイルを参考にしてください。\n過去の投稿例:\n{past_posts}\n"
+    # 長さをランダム化（最大140文字）
+    max_len = random.randint(10, 50)
 
+    # プロンプト組み立て
     prompt = f"""
-        {profile['name']}というキャラクターとして投稿を作成してください。
-        口調は{profile['tone']}です。
-        投稿は{profile['theme']}が中心です。
-        今の時刻は{time_ctx}です。
-        {" 天気は{weather_ctx}です。" if include_weather and weather_ctx else ""}
-        {past_posts}
-        {text_length}文字以内で自然なX投稿を1つ生成してください。
-        「【新しい投稿】：」などのような、不自然な文言は含めないでください。
-        「」や""などの記号は使用しないでください。
-        """
-
+    あなたは{profile['name']}というキャラクターです。
+    口調は{profile['tone']}です。
+    テーマは「{profile['theme']}」です。
+    投稿内容は自然で親しみやすいものにしてください。
+    {f'今の時刻は{time_ctx}です。' if time_ctx else ''}
+    {f'天気は{weather_ctx}です。' if weather_ctx else ''}
+    {f'現在話題のトピック: {trend_ctx}' if trend_ctx else ''}
+    {past_posts}
+    Xに投稿する文章を{max_len}文字以内で1つ作成してください。
+    「新しい投稿：」などの見出しは不要です。
+    「」や""などの記号も不要です。
+    """
+    logging.info(f"[DEBUG] Prompt: {prompt.strip()}")
     try:
         response = openai.chat.completions.create(
             model="gpt-4.1-nano",

@@ -37,15 +37,21 @@ def generate_natural_post(account_index: int) -> str:
     include_weather = random.random() < 0.1
     weather_ctx = get_weather_context() if include_weather else None
 
+    # 投稿の文字数をランダムに決定（1〜20文字）
+    text_length = random.randint(5, 20)
+
+    # 過去投稿を参考にするのは確率10%
+    if past_posts and random.random() < 0.1:
+        past_posts = f"過去投稿のスタイルを参考にしてください。\n過去の投稿例:\n{past_posts}\n"
+
     prompt = f"""
         {profile['name']}というキャラクターとして投稿を作成してください。
-        投稿は{profile['theme']}が中心で、口調は{profile['tone']}です。
+        口調は{profile['tone']}です。
+        投稿は{profile['theme']}が中心です。
         今の時刻は{time_ctx}です。
         {" 天気は{weather_ctx}です。" if include_weather and weather_ctx else ""}
-        以下の過去投稿のスタイルを参考にしてください。
-        【過去投稿例】
         {past_posts}
-        30文字から140文字以内で自然なX投稿を1つ生成してください。
+        {text_length}文字以内で自然なX投稿を1つ生成してください。
         「【新しい投稿】：」などのような、不自然な文言は含めないでください。
         「」や""などの記号は使用しないでください。
         """

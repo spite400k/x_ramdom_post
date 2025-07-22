@@ -26,9 +26,12 @@ def post_to_account(account, account_index):
         access_token=account["ACCESS_TOKEN"],
         access_token_secret=account["ACCESS_TOKEN_SECRET"],
     )
-
-    tweet = generate_natural_post(account_index)
+    logging.info(f"Account {account_index + 1}: Posting to {account.get('id', 'Unknown ID')}")
+    tweet = generate_natural_post(account, account_index)
     try:
+        if debug_mode := os.getenv("DEBUG_MODE", "false").lower() == "true":
+            logging.info(f"[DEBUG] Account {account_index + 1}: {tweet}")
+            return
         response = client.create_tweet(text=tweet)
         logging.info(f"Account {account_index + 1}: Posted: {tweet}")
     except Exception as e:

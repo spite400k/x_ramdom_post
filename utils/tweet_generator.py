@@ -22,7 +22,7 @@ def load_previous_posts(account_index: int) -> str:
     samples = random.sample(lines, min(3, len(lines)))
     return "".join(samples)
 
-def generate_natural_post(account,account_index: int) -> str:
+def generate_natural_post(account, account_index: int = 0) -> str:
     profile = PERSONALITY_PROFILES.get(account_index, {
         "name": f"Account{account_index + 1}",
         "tone": "自然で親しみやすい口調",

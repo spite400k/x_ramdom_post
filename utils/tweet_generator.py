@@ -32,7 +32,7 @@ def generate_natural_post(account, account_index: int = 0) -> str:
     # コンテキスト情報（天気・時間・トレンド）
     include_time = random.random() < 0.1
     include_weather = random.random() < 0.1
-    include_trend = random.random() < 1.0
+    include_trend = random.random() < 0.1
 
     time_ctx = get_time_context() if include_time else None
     weather_ctx = get_weather_context() if include_weather else None

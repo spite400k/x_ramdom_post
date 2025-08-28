@@ -11,6 +11,17 @@ from utils.trend_analyzer import get_google_trends
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
+hashtags = [
+    "#フォロバ",
+    "#フォロバ100",
+    "#フォロバ100絶対",
+    "#フォローした人全員フォロバする",
+    "#相互フォロー",
+    "#相互フォロー100",
+    "#フォロバ相互募集中"
+]
+
+
 def load_previous_posts(account_index: int) -> str:
     path = f"data/account{account_index + 1}_posts.txt"
     if not os.path.exists(path):
@@ -85,7 +96,15 @@ def generate_natural_post(account, account_index: int = 0) -> str:
             messages=[{"role": "user", "content": prompt}],
             temperature=0.8,
         )
-        return response.choices[0].message.content.strip()
+
+        
+        tweet_text = response.choices[0].message.content.strip()
+
+        # ハッシュタグを末尾に追加
+        tweet_text_with_hashtags = tweet_text + "\n\n" + " ".join(hashtags)
+
+        return tweet_text_with_hashtags
+
     except Exception as e:
         print(f"[OpenAI Error] {e}")
         return "今日も一日おつかれさまでした。"

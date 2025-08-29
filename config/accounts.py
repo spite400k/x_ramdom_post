@@ -16,12 +16,12 @@ ACCOUNTS = [
         "ACCESS_TOKEN": os.getenv("ACCESS_TOKEN_2"),
         "ACCESS_TOKEN_SECRET": os.getenv("ACCESS_TOKEN_SECRET_2")
     },
-    {
-        "API_KEY": os.getenv("API_KEY_3"),
-        "API_SECRET": os.getenv("API_SECRET_KEY_3"),
-        "ACCESS_TOKEN": os.getenv("ACCESS_TOKEN_3"),
-        "ACCESS_TOKEN_SECRET": os.getenv("ACCESS_TOKEN_SECRET_3")
-    },
+ #   {
+#        "API_KEY": os.getenv("API_KEY_3"),
+ #       "API_SECRET": os.getenv("API_SECRET_KEY_3"),
+ #       "ACCESS_TOKEN": os.getenv("ACCESS_TOKEN_3"),
+ #       "ACCESS_TOKEN_SECRET": os.getenv("ACCESS_TOKEN_SECRET_3")
+ #   },
     {
         "API_KEY": os.getenv("API_KEY_4"),
         "API_SECRET": os.getenv("API_SECRET_KEY_4"),

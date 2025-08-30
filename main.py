@@ -49,7 +49,7 @@ def main():
         logging.info(f"Account {account['id']} - {account['screen_name']}: {wait_minutes}分待機してから投稿します")
         time.sleep(wait_minutes * 60)
         try:
-            # post_to_account(account)
+            post_to_account(account)
             logging.info(f"Account {account['id']} - {account['screen_name']}: 投稿成功")
         except Exception as e:
             logging.error(f"Account {account['id']} - {account['screen_name']}: 投稿失敗 - {e}")

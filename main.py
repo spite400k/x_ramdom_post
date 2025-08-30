@@ -36,17 +36,23 @@ def main():
         logging.info("現在は投稿許可時間外（7:00〜21:59）です。スキップします。")
         return
 
-    for idx, account in enumerate(ACCOUNTS):
-        logging.info(f"\n--- Posting for Account {idx + 1} ---")
-        # wait = random.randint(60, 60 * 60)  # 1分〜60分のランダム
-        wait=1
-        logging.info(f"Account {idx + 1}: {wait // 60}分待機してから投稿します")
+    for account in ACCOUNTS:
+
+        if not account["enabled"]:
+            logging.warning(f"⚠️ {account['screen_name']} は実施フラグOFFのためスキップします")
+            continue
+            
+
+        logging.info(f"\n--- Posting for Account {account['id']} - {account['screen_name']} ---")
+        wait = random.randint(60, 60 * 60)  # 1分〜60分のランダム
+        # wait=1
+        logging.info(f"Account {account['id']} - {account['screen_name']}: {wait // 60}分待機してから投稿します")
         time.sleep(wait)
         try:
-            post_to_account(account, idx)
-            logging.info(f"Account {idx + 1} {account.get('id', '')}: 投稿成功")
+            # post_to_account(account)
+            logging.info(f"Account {account['id']} - {account['screen_name']}: 投稿成功")
         except Exception as e:
-            logging.error(f"Account {idx + 1} {account.get('id', '')}: 投稿失敗 - {e}")
+            logging.error(f"Account {account['id']} - {account['screen_name']}: 投稿失敗 - {e}")
 
 if __name__ == "__main__":
     main()

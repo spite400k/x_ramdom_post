@@ -13,17 +13,12 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 
 hashtags = [
     "#フォロバ",
-    "#フォロバ100",
-    "#フォロバ100絶対",
     "#フォローした人全員フォロバする",
-    "#相互フォロー",
-    "#相互フォロー100",
-    "#フォロバ相互募集中"
 ]
 
 
 def load_previous_posts(account_index: int) -> str:
-    path = f"data/account{account_index + 1}_posts.txt"
+    path = f"data/account{account_index}_posts.txt"
     if not os.path.exists(path):
         return ""
     with open(path, "r", encoding="utf-8") as f:
@@ -34,11 +29,7 @@ def load_previous_posts(account_index: int) -> str:
     return "".join(samples)
 
 def generate_natural_post(account, account_index: int = 0) -> str:
-    profile = PERSONALITY_PROFILES.get(account_index, {
-        "name": f"Account{account_index + 1}",
-        "tone": "自然で親しみやすい口調",
-        "theme": "日常の出来事を話す"
-    })
+    profile = PERSONALITY_PROFILES.get(account_index)
 
     # コンテキスト情報（天気・時間・トレンド）
     include_time = random.random() < 0.1
@@ -49,9 +40,9 @@ def generate_natural_post(account, account_index: int = 0) -> str:
     weather_ctx = get_weather_context() if include_weather else None
     trend_ctx = get_google_trends(profile['theme'], account) if include_trend else None
 
-    # 過去投稿の使用（10%）
+    # 過去投稿の使用（1%）
     past_posts = load_previous_posts(account_index)
-    use_past = past_posts and random.random() < 0.1
+    use_past = past_posts and random.random() < 0.01
     if use_past:
         past_posts = f"過去の投稿例:\n{past_posts}\n"
     else:

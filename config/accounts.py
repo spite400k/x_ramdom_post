@@ -15,7 +15,7 @@ ACCOUNTS = [
     },
     {
         "id": "2",
-        "enabled": False,
+        "enabled": True,
         "screen_name": "Ren47291",
         "API_KEY": os.getenv("API_KEY_2"),
         "API_SECRET": os.getenv("API_SECRET_KEY_2"),
@@ -24,7 +24,7 @@ ACCOUNTS = [
     },
     {
         "id": "3",
-        "enabled": False,
+        "enabled": True,
         "screen_name": "Sora36100",
         "API_KEY": os.getenv("API_KEY_3"),
         "API_SECRET": os.getenv("API_SECRET_KEY_3"),

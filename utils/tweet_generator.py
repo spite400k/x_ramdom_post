@@ -35,6 +35,7 @@ def generate_natural_post(account, account_index: int = 0) -> str:
     include_time = random.random() < 0.1
     include_weather = random.random() < 0.1
     include_trend = random.random() < 0.1
+    include_theme = random.random() < 0.1
 
     time_ctx = get_time_context() if include_time else None
     weather_ctx = get_weather_context() if include_weather else None
@@ -56,7 +57,7 @@ def generate_natural_post(account, account_index: int = 0) -> str:
     #命令
     あなたは{profile['name']}というキャラクターです。
     口調は{profile['tone']}です。
-    好きなものは「{profile['theme']}」です。
+    好きなものは「{profile['theme']  if include_theme else ''}」です。
     投稿内容は自然で親しみやすいものにしてください。
     
     #制約条件

@@ -15,7 +15,7 @@ ACCOUNTS = [
     },
     {
         "id": "2",
-        "enabled": True,
+        "enabled": False,
         "screen_name": "Ren47291",
         "API_KEY": os.getenv("API_KEY_2"),
         "API_SECRET": os.getenv("API_SECRET_KEY_2"),

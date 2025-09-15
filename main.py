@@ -45,7 +45,7 @@ def main():
 
         logging.info(f"\n--- Posting for Account {account['id']} - {account['screen_name']} ---")
         wait_minutes = random.randint(1, 10)  # 1分〜10分のランダム
-        # wait_minutes=1
+        # wait_minutes=0
         logging.info(f"Account {account['id']} - {account['screen_name']}: {wait_minutes}分待機してから投稿します")
         time.sleep(wait_minutes * 60)
         try:

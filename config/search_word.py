@@ -2,15 +2,15 @@
 
 SEARCH_WORDS = {
     "1": {
-        "picture": "猫",
+        "picture": "cute cat bright sunlight",
     },
     "2": {
-        "picture": "猫",
+        "picture": "可愛い猫",
     },
     "3": {
-        "picture": "猫",
+        "picture": "happy cat bright",
     },
     "4": {
-        "picture": "猫",
+        "picture": "cute cat bright sunlight",
     },
 }

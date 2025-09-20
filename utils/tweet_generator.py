@@ -5,6 +5,7 @@ import os
 import random
 import requests
 from datetime import datetime
+from config.search_word import SEARCH_WORDS
 from utils.weather import get_weather_context
 from utils.time_context import get_time_context
 from config.personality_profiles import PERSONALITY_PROFILES
@@ -32,6 +33,7 @@ hashtags = [
 # Unsplashから猫画像を取得
 # ---------------------
 def get_random_cat_image(query="cat"):
+
     url = "https://api.unsplash.com/photos/random"
     headers = {"Authorization": f"Client-ID {UNSPLASH_ACCESS_KEY}"}
     params = {"query": query, "orientation": "landscape"}
@@ -65,15 +67,18 @@ def generate_natural_post(account, account_index: int = 0):
     profile = PERSONALITY_PROFILES.get(account_index)
 
     include_picture = random.random() < 0.5  # 50%で猫画像を付ける
+    include_picture=True
     if include_picture:
+
+        word = SEARCH_WORDS.get(account_index)
+
         # 猫画像をUnsplashから取得
-        img_url, photographer, photo_link = get_random_cat_image("cute cat")
+        img_url, photographer, photo_link = get_random_cat_image(word['picture'] if word else "cat")
 
         if img_url:
             tweet_text_with_hashtags = (
-                f"今日のにゃんこ🐱 {profile['input'] if 'input' in profile else ''}\n\n"
-                f"#猫好き #猫のいる生活\n"
-                f"Photo by {photographer} on Unsplash: {photo_link}"
+                f"今日のにゃんこ🐱 \n\n"
+                f"#猫好きさんと繋がりたい #猫好き \n\n"
             )
             return tweet_text_with_hashtags, img_url
         else:

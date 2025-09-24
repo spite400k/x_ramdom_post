@@ -47,32 +47,36 @@ def post_to_account(account):
             logging.info(f"[DEBUG] Account {account_index}: {tweet}, Picture={picture_url}")
             return
 
-        # 画像を必ず取得
-        if not picture_url:
-            logging.error(f"Account {account_index}: No picture URL received, aborting post.")
-            return
+        # 画像付き投稿
+        if picture_url:
+            # 画像をダウンロード
+            logging.info(f"Account {account_index}: Downloading image {picture_url}")
+            response = requests.get(picture_url, stream=True)
+            if response.status_code != 200:
+                logging.error(f"Account {account_index}: Failed to download image")
+                return
 
-        logging.info(f"Account {account_index}: Downloading image {picture_url}")
-        response = requests.get(picture_url, stream=True)
-        if response.status_code != 200:
-            logging.error(f"Account {account_index}: Failed to download image")
-            return
+            # 一時ファイルに保存
+            temp_filename = "temp_image.jpg"
+            with open(temp_filename, "wb") as f:
+                f.write(response.content)
 
-        # 一時ファイルに保存
-        temp_filename = "temp_image.jpg"
-        with open(temp_filename, "wb") as f:
-            f.write(response.content)
+            # 画像をアップロード
+            media = api_v1.media_upload(temp_filename)
+            media_ids = [media.media_id]
 
-        # 画像をアップロード
-        media = api_v1.media_upload(temp_filename)
-        media_ids = [media.media_id]
+            # 一時ファイル削除
+            os.remove(temp_filename)
 
-        # 一時ファイル削除
-        os.remove(temp_filename)
+            # ツイート投稿（必ず画像付き）
+            response = client.create_tweet(text=tweet, media_ids=media_ids)
+            logging.info(f"Account {account_index}: Posted with image: {tweet}")
+        
+        # 画像なし投稿
+        else:
+            response = client.create_tweet(text=tweet)
+            logging.info(f"Account {account_index}: Posted: {tweet}")
 
-        # ツイート投稿（必ず画像付き）
-        response = client.create_tweet(text=tweet, media_ids=media_ids)
-        logging.info(f"Account {account_index}: Posted with image: {tweet}")
 
     except Exception as e:
         logging.error(f"Account {account_index}: Error posting - {e}")

@@ -10,9 +10,9 @@ from utils.weather import get_weather_context
 from utils.time_context import get_time_context
 from config.personality_profiles import PERSONALITY_PROFILES
 from utils.trend_analyzer import get_google_trends
+from utils.cat_tweet import generate_cat_tweet
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
-UNSPLASH_ACCESS_KEY = os.getenv("UNSPLASH_ACCESS_KEY")
 
 hashtags = [
     "#フォロバ",
@@ -29,22 +29,6 @@ hashtags = [
     "#フォロバお願いします"
 ]
 
-# ---------------------
-# Unsplashから猫画像を取得
-# ---------------------
-def get_random_cat_image(query="cat"):
-
-    url = "https://api.unsplash.com/photos/random"
-    headers = {"Authorization": f"Client-ID {UNSPLASH_ACCESS_KEY}"}
-    params = {"query": query, "orientation": "landscape"}
-
-    try:
-        response = requests.get(url, headers=headers, params=params)
-        data = response.json()
-        return data["urls"]["regular"], data["user"]["name"], data["links"]["html"]
-    except Exception as e:
-        logging.error(f"[Unsplash Error] {e}")
-        return None, None, None
 
 # ---------------------
 # 過去投稿読み込み
@@ -67,25 +51,20 @@ def generate_natural_post(account, account_index: int = 0):
     profile = PERSONALITY_PROFILES.get(account_index)
 
     include_picture = random.random() < 0.5  # 50%で猫画像を付ける
-    include_picture=True
+    # include_picture = True
+
+    # 猫画像付き投稿
     if include_picture:
 
-        word = SEARCH_WORDS.get(account_index)
-
-        # 猫画像をUnsplashから取得
-        img_url, photographer, photo_link = get_random_cat_image(word['picture'] if word else "cat")
-
-        if img_url:
-            tweet_text_with_hashtags = (
-                f"今日のにゃんこ🐱 \n\n"
-                f"#猫好きさんと繋がりたい #猫好き \n\n"
-            )
+        # 猫画像取得
+        tweet_text_with_hashtags, img_url = generate_cat_tweet(account_index)
+        if tweet_text_with_hashtags and img_url:
             return tweet_text_with_hashtags, img_url
         else:
-            # フォールバック（画像なし）
             include_picture = False
 
-    if not include_picture:
+    # 猫画像なし投稿
+    else:
         # コンテキスト情報（天気・時間・トレンド）
         include_time = random.random() < 0.1
         include_weather = random.random() < 0.1
@@ -128,7 +107,7 @@ def generate_natural_post(account, account_index: int = 0):
         {past_posts}
         """
 
-        logging.info(f"[DEBUG] Prompt: {prompt.strip()}")
+        # logging.info(f"[DEBUG] Prompt: {prompt.strip()}")
         try:
             response = openai.chat.completions.create(
                 model="gpt-4.1-nano",
